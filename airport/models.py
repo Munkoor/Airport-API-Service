@@ -13,8 +13,10 @@ class Airport(models.Model):
 
 
 class Route(models.Model):
-    source = models.ForeignKey(Airport, on_delete=models.CASCADE)
-    destination = models.ForeignKey(Airport, on_delete=models.CASCADE)
+    source = models.ForeignKey(Airport, on_delete=models.CASCADE,
+                               related_name="source_routes")
+    destination = models.ForeignKey(Airport, on_delete=models.CASCADE,
+                                    related_name="destination_routes")
     distance = models.IntegerField()
 
 
@@ -37,7 +39,7 @@ class Flight(models.Model):
     crew = models.ManyToManyField(Crew)
 
 
-class Order:
+class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
