@@ -1,5 +1,7 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import UniqueConstraint
 
 
 class Crew(models.Model):
@@ -53,6 +55,9 @@ class Flight(models.Model):
     arrival_time = models.DateTimeField()
     crew = models.ManyToManyField(Crew)
 
+    def __str__(self):
+        return f"{self.route}"
+
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -60,9 +65,37 @@ class Order(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    def __str__(self):
+        return self.user
+
 
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,
+                              related_name="tickets")
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=["seat", "flight"],
+                             name="unique_ticket_seat_flight")
+        ]
+
+    def __str__(self):
+        return f"{self.flight} - (row: {self.row}, seat: {self.seat})"
+
+    def clean(self):
+        if not (1 <= self.row <= self.flight.airplane.rows):
+            raise ValidationError({"row": f"row must be in range [1, {self.flight.airplane.rows}"})
+
+        if not (1 <= self.seat <= self.flight.airplane.seats_in_row):
+            raise ValidationError({"seat": f'seat must be in range [1, {self.flight.airplane.seats_in_row}]'})
+
+    def save(
+            self, force_insert=False, force_update=False, using=None,
+            update_fields=None
+    ):
+        self.full_clean()
+        return super(Ticket, self).save(force_insert, force_update, using,
+                                        update_fields)
