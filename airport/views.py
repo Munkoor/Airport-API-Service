@@ -1,4 +1,7 @@
+from django.db.models import Count, F
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
+
 from airport.models import (
     Crew,
     Airport,
@@ -19,7 +22,8 @@ from airport.serializers import (
     FlightSerializer,
     FlightListSerializer,
     FlightDetailSerializer,
-    OrderSerializer
+    OrderSerializer,
+    OrderListSerializer,
 )
 
 
@@ -77,10 +81,22 @@ class RouteViewSet(viewsets.ModelViewSet):
 
 
 class FlightViewSet(viewsets.ModelViewSet):
-    queryset = Flight.objects.all().select_related("route",
-                                                   "airplane").prefetch_related(
-        "crew")
+    queryset = Flight.objects.all()
     serializer_class = FlightSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action == "list":
+            queryset = queryset.select_related("route", "airplane").annotate(
+                tickets_available=F("airplane__rows") * F(
+                    "airplane__seats_in_row") - Count(
+                    "tickets")).order_by("id")
+
+        if self.action == "retrieve":
+            queryset = queryset.prefetch_related("crew")
+
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -92,13 +108,30 @@ class FlightViewSet(viewsets.ModelViewSet):
         return FlightSerializer
 
 
+class OrderPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    pagination_class = OrderPagination
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        queryset = self.queryset.filter(user=self.request.user)
+
+        if self.action == "list":
+            queryset = queryset.prefetch_related("tickets__flight__airplane")
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return OrderListSerializer
+
+        return OrderSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
