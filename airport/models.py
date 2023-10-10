@@ -1,3 +1,6 @@
+import os.path
+import uuid
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -49,11 +52,19 @@ class AirplaneType(models.Model):
         return self.name
 
 
+def airplane_image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{instance.name}-{uuid.uuid4}.{extension}"
+
+    return os.path.join("upload/airplanes/", filename)
+
+
 class Airplane(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
     airplane_type = models.ForeignKey(AirplaneType, on_delete=models.CASCADE)
+    image = models.ImageField(null=True, upload_to=airplane_image_file_path)
 
     @property
     def capacity(self):
@@ -102,11 +113,11 @@ class Ticket(models.Model):
     def clean(self):
         if not (1 <= self.row <= self.flight.airplane.rows):
             raise ValidationError({
-                                      "row": f"row must be in range [1, {self.flight.airplane.rows}"})
+                "row": f"row must be in range [1, {self.flight.airplane.rows}"})
 
         if not (1 <= self.seat <= self.flight.airplane.seats_in_row):
             raise ValidationError({
-                                      "seat": f'seat must be in range [1, {self.flight.airplane.seats_in_row}]'})
+                "seat": f'seat must be in range [1, {self.flight.airplane.seats_in_row}]'})
 
     def save(
             self, force_insert=False, force_update=False, using=None,
