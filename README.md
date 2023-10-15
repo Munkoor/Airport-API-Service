@@ -1,4 +1,4 @@
-# [![Typing SVG](https://readme-typing-svg.herokuapp.com?color=%FFFFFF&lines=Airport+API+Service)](https://git.io/typing-svg)
+# Airport API Service
 
 Airport API Service - a reliable and convenient tool for accessing up-to-date
 information about airports worldwide, simplifying data management and expanding
