@@ -18,6 +18,10 @@ possibilities within the aviation industry.
 6. **API Documentation(Swagger):** is an API documentation and testing tool that allows you to automatically generate API documentation from a description of the API structure in YAML or JSON file format.
 
 
+### DB Structure
+![img_6.png](Screenshots of API/img_6.png)
+
+
 
 ### Installation
 
@@ -31,5 +35,13 @@ source venv//Scripts//activate
 pip install -r requirements.txt
 pythone manage.py runserver
 ```
+
+### Screenshots of different pages of Browsable API
+![img.png](Screenshots of API/img.png)
+![img_1.png](Screenshots of API/img_1.png)
+![img_2.png](Screenshots of API/img_2.png)
+![img_3.png](Screenshots of API/img_3.png)
+![img_4.png](Screenshots of API/img_4.png)
+![img_5.png](Screenshots of API/img_5.png)
 
 
