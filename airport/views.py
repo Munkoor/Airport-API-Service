@@ -5,15 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from airport.models import (
-    Crew,
-    Airport,
-    AirplaneType,
-    Airplane,
-    Route,
-    Flight,
-    Order
-)
+from airport.models import Crew, Airport, AirplaneType, Airplane, Route, Flight, Order
 from airport.serializers import (
     CrewSerializer,
     AirportSerializer,
@@ -26,7 +18,8 @@ from airport.serializers import (
     FlightListSerializer,
     FlightDetailSerializer,
     OrderSerializer,
-    OrderListSerializer, AirplaneImageSerializer,
+    OrderListSerializer,
+    AirplaneImageSerializer,
 )
 
 
@@ -109,10 +102,14 @@ class FlightViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
 
         if self.action == "list":
-            queryset = queryset.select_related("route", "airplane").annotate(
-                tickets_available=F("airplane__rows") * F(
-                    "airplane__seats_in_row") - Count(
-                    "tickets")).order_by("id")
+            queryset = (
+                queryset.select_related("route", "airplane")
+                .annotate(
+                    tickets_available=F("airplane__rows") * F("airplane__seats_in_row")
+                    - Count("tickets")
+                )
+                .order_by("id")
+            )
 
         if self.action == "retrieve":
             queryset = queryset.prefetch_related("crew")

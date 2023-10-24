@@ -10,7 +10,7 @@ from airport.models import (
     Route,
     Flight,
     Ticket,
-    Order
+    Order,
 )
 
 
@@ -43,7 +43,6 @@ class AirplaneListSerializer(AirplaneSerializer):
 
 
 class AirplaneImageSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Airplane
         fields = ("id", "image")
@@ -69,9 +68,7 @@ class TicketSeatSerializer(serializers.ModelSerializer):
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
-        fields = (
-            "id", "route", "airplane", "departure_time", "arrival_time", "crew"
-        )
+        fields = ("id", "route", "airplane", "departure_time", "arrival_time", "crew")
 
 
 class FlightListSerializer(FlightSerializer):
@@ -82,8 +79,14 @@ class FlightListSerializer(FlightSerializer):
     class Meta:
         model = Flight
         fields = (
-            "id", "route", "airplane", "departure_time", "arrival_time", "crew",
-            "capacity", "tickets_available"
+            "id",
+            "route",
+            "airplane",
+            "departure_time",
+            "arrival_time",
+            "crew",
+            "capacity",
+            "tickets_available",
         )
 
 
@@ -106,14 +109,19 @@ class FlightDetailSerializer(FlightSerializer):
     route = RouteListSerializer(many=False, read_only=True)
     airplane = AirplaneListSerializer(many=False, read_only=True)
     crew = CrewSerializer(many=True, read_only=True)
-    taken_seats = TicketSeatSerializer(source="tickets", many=True,
-                                       read_only=True)
+    taken_seats = TicketSeatSerializer(source="tickets", many=True, read_only=True)
 
     class Meta:
         model = Flight
         fields = (
-            "id", "route", "airplane", "departure_time", "arrival_time", "crew",
-            "taken_seats")
+            "id",
+            "route",
+            "airplane",
+            "departure_time",
+            "arrival_time",
+            "crew",
+            "taken_seats",
+        )
 
 
 class OrderSerializer(serializers.ModelSerializer):

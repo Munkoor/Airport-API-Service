@@ -5,24 +5,38 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('airport', '0003_alter_ticket_order_ticket_unique_ticket_seat_flight'),
+        ("airport", "0003_alter_ticket_order_ticket_unique_ticket_seat_flight"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='ticket',
-            options={'ordering': ('seat',)},
+            name="ticket",
+            options={"ordering": ("seat",)},
         ),
         migrations.AddField(
-            model_name='crew',
-            name='position',
-            field=models.CharField(choices=[('Captain', 'Captain'), ('Co-pilot', 'Co-pilot'), ('Cabin Crew', 'Cabin_crew'), ('Radio Operator', 'Radio_operator'), ('Navigator', 'Navigator'), ('Flight Engineer', 'Flight_engineer')], default='Cabin_crew', max_length=20),
+            model_name="crew",
+            name="position",
+            field=models.CharField(
+                choices=[
+                    ("Captain", "Captain"),
+                    ("Co-pilot", "Co-pilot"),
+                    ("Cabin Crew", "Cabin_crew"),
+                    ("Radio Operator", "Radio_operator"),
+                    ("Navigator", "Navigator"),
+                    ("Flight Engineer", "Flight_engineer"),
+                ],
+                default="Cabin_crew",
+                max_length=20,
+            ),
         ),
         migrations.AlterField(
-            model_name='ticket',
-            name='flight',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='airport.flight'),
+            model_name="ticket",
+            name="flight",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tickets",
+                to="airport.flight",
+            ),
         ),
     ]

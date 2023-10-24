@@ -5,19 +5,24 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('airport', '0002_alter_airport_name'),
+        ("airport", "0002_alter_airport_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='ticket',
-            name='order',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='airport.order'),
+            model_name="ticket",
+            name="order",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tickets",
+                to="airport.order",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='ticket',
-            constraint=models.UniqueConstraint(fields=('seat', 'flight'), name='unique_ticket_seat_flight'),
+            model_name="ticket",
+            constraint=models.UniqueConstraint(
+                fields=("seat", "flight"), name="unique_ticket_seat_flight"
+            ),
         ),
     ]

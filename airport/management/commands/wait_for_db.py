@@ -14,7 +14,6 @@ class Command(BaseCommand):
         connected = False
 
         while not connected:
-
             time.sleep(5)
 
             try:
