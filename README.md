@@ -19,7 +19,7 @@ possibilities within the aviation industry.
 
 
 ### DB Structure
-![img_6.png](Screenshots of API/img_6.png)
+![img_6.png](images/img_6.png)
 
 
 
@@ -37,11 +37,11 @@ pythone manage.py runserver
 ```
 
 ### Screenshots of different pages of Browsable API
-![img.png](Screenshots of API/img.png)
-![img_1.png](Screenshots of API/img_1.png)
-![img_2.png](Screenshots of API/img_2.png)
-![img_3.png](Screenshots of API/img_3.png)
-![img_4.png](Screenshots of API/img_4.png)
-![img_5.png](Screenshots of API/img_5.png)
+![img.png](images/img.png)
+![img_1.png](images/img_1.png)
+![img_2.png](images/img_2.png)
+![img_3.png](images/img_3.png)
+![img_4.png](images/img_4.png)
+![img_5.png](images/img_5.png)
 
 
